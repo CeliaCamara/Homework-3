@@ -90,3 +90,62 @@ Interpretation and conclusion
 •	Nevertheless, the difference between incongruent and congruent trials actually seems larger in the standing block, meaning that the stroop effect was not smaller when participants were standing.
 •	In conclusion, the present analysis rejects the hypothesis that the stroop effect is reduced by standing up, and hence indicates that this study was not able to replicate the original experiment.
 
+3.The Dimensions of Popular Music
+Alasdair thinks that modern pop music is rubbish, and all sounds the same. To support his view, he found an interesting article on the internet that walks through applying PCA to the Top 200 songs from Spotify (from 2018). The writer claims that when PCA is applied to this dataset, 99% of the variance can be explained using only two dimensions! (Alasdair feels justified in his biases.)
+•	Download the dataset used for the article. Can you replicate their PCA results? [10 marks]
+•	How would you interpret their finndings? [10 marks]
+•	Improve on their analysis in any way you see fit, visualise your results and discuss your conclusions. [15 marks]
+We want to build a model for [the Global Top 200 songs on Spotify in 2018] (Retrieved from: github.com/PrathamNawal/All-About-the-Music/blob/master/Spotifier/Data/spotify_cleaned.csv)
+Import the data file
+library(tidyverse)
+#load the data
+data <- read.csv('spotify_cleaned.csv')
+Principal Component Analysis (PCA)
+•	Before proceeding to the PCA, we will need to discard the variables that are not relevant for our analysis (i.e., we remove the number of the song, the track name, the artist and the number of streams).
+•	Then, we can apply the command prcomp() to the data in order to generate the PCA - I labelled the new data as pca_data to indicate the PCA.
+•	Finally, we summarise the pca_data to observe the resulting components.
+data <- select(data, -Track.Name, -Artist, -Streams) #remove the variables that are not needed for analysis
+pca_data <- prcomp(data) #Principal Component Analysis with updated data
+
+summary(pca_data) #summarise pca_data to observe principal components
+## Importance of components:
+##                            PC1     PC2     PC3     PC4     PC5     PC6     PC7
+## Standard deviation     58.0716 38.3781 28.8100 3.73023 1.92576 0.46402 0.20982
+## Proportion of Variance  0.5923  0.2587  0.1458 0.00244 0.00065 0.00004 0.00001
+## Cumulative Proportion   0.5923  0.8510  0.9968 0.99929 0.99994 0.99998 0.99998
+##                            PC8    PC9   PC10   PC11    PC12    PC13    PC14
+## Standard deviation     0.18297 0.1615 0.1173 0.1026 0.08942 0.07783 0.01857
+## Proportion of Variance 0.00001 0.0000 0.0000 0.0000 0.00000 0.00000 0.00000
+## Cumulative Proportion  0.99999 1.0000 1.0000 1.0000 1.00000 1.00000 1.00000
+Scree plot
+•	Enter the command screeplot () to generate a scree plot and visualize the pca_data in order to further observe the dimensions that need to be considered in our model.
+screeplot(pca_data, type="barplot", main="Scree Plot")
+ ![image](https://user-images.githubusercontent.com/79974568/110117585-f7cc2780-7db0-11eb-8fac-1b2c8e2fea7c.png)
+
+Interpretation of the results
+•	The summary table indicates that almost 100% of the variance is explained by the first two components of our model, with the first component (PC1) accounting for approximately 64% of the variance (Proportion of Variance=.6375), and the second component (PC2) accounting for about 35% of the variance (Proportion of Variance=.3548).
+•	This shows that the vast majority of the information included in the dataset seems to be explained by these two principal components.
+•	Additionally, the scree plot nicely illustrates how the other principal components account for very little of the variance. Therefore, we can say that the components from PC3 onward only add noise.
+•	These results coincide with Nawal’s(2018), meaning that their PCA has been successfully replicated.
+Improve the analysis
+•	We can improve this analysis by re-running it with scaling.
+pca_data <- prcomp(data, scale = TRUE) #introduce scaling to pca_data
+
+summary(pca_data) #summarise updated pca_data to observe new principal components
+## Importance of components:
+##                           PC1    PC2     PC3     PC4     PC5     PC6     PC7
+## Standard deviation     1.5893 1.2644 1.17187 1.14573 1.05091 0.99113 0.94839
+## Proportion of Variance 0.1804 0.1142 0.09809 0.09376 0.07889 0.07017 0.06425
+## Cumulative Proportion  0.1804 0.2946 0.39271 0.48648 0.56536 0.63553 0.69977
+##                            PC8     PC9    PC10    PC11    PC12    PC13    PC14
+## Standard deviation     0.91503 0.88676 0.86356 0.79923 0.77089 0.61075 0.47723
+## Proportion of Variance 0.05981 0.05617 0.05327 0.04563 0.04245 0.02664 0.01627
+## Cumulative Proportion  0.75958 0.81575 0.86901 0.91464 0.95709 0.98373 1.00000
+Scree Plot After Scaling
+screeplot(pca_data, main="Scree Plot After Scaling") #second screeplot to visualize new principal components
+ ![image](https://user-images.githubusercontent.com/79974568/110117556-ee42bf80-7db0-11eb-9195-9abc7a234b4c.png)
+
+•	Observe how, after scaling the data, the proportion of variance accounted for the model is much more distributed across the different principal components, which makes it harder to establish a clear cut for our model.
+•	This doesn’t fit well with the original interpretation as it seems that the first two components only account for about 30% of the variance.
+Conclusion
+•	Altogether, our additional analysis seems to suggest that there is some variation in pop music after all.
