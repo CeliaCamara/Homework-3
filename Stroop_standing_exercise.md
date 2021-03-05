@@ -17,9 +17,6 @@ Data pre-processing
 #select only correct responses
 correct_data <- filter(data, 
                        correct == TRUE) # Correct responses are coded as 1 (1=TRUE)
-
-mean_rt <- mean(rt)
-## Warning in mean.default(rt): argument is not numeric or logical: returning NA
 #remove extreme values to leave the final data for analysis
 final_data <- correct_data %>%
   filter(rt > 0.200 & rt < 2.00) %>% #select rts that fall within 200ms and 2000ms as the set of boundaries
